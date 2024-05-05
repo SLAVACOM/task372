@@ -7,5 +7,5 @@ int main()
 	setlocale(LC_ALL, "RUS");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
-	task();
+	return task();
 }

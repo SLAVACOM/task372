@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void task() {
+int task() {
 	regex valid_input("^[01]$");
 	
 	string input;
@@ -31,7 +31,9 @@ void task() {
 			readFromConsole(matrix_n, matrix_m);
 		}
 		else if (in_option == '1') {
-			readFromFile(constants::input,matrix_n, matrix_m);
+			if (!readFromFile(constants::input, matrix_n, matrix_m)) {
+				return 1;
+			}
 		}
 
 		int** matrix = new int* [matrix_n];
@@ -60,8 +62,9 @@ void task() {
 		}
 		else if (out_option == '1'){
 			writeToFile(constants::output, matrix, matrix_n, matrix_m);
-			 
 		}
+
+		freeMatrix(matrix, matrix_n);
 		if (in_option == '0') {
 			do {
 				cout << "Введите '0' для повтора программы, '1' для завершения программы: ";
@@ -70,6 +73,7 @@ void task() {
 			in_option = input[0];
 		}
 	} while (in_option != '1');
+	return 0;
 }
 
 void readFromConsole(int& matrix_n, int& matrix_m) {
@@ -90,18 +94,26 @@ void readFromConsole(int& matrix_n, int& matrix_m) {
 	matrix_m = stoi(input);
 }
 
-void readFromFile(const char* input,  int& matrix_n, int& matrix_m) {
+bool readFromFile(const char* input,  int& matrix_n, int& matrix_m) {
 	ifstream file(input);
 
 	if (!file.is_open()) {
 		cerr << "Ошибка при открытии файла с входнымми данными" << endl;
+		return false;
 	}
-	if (!(file >> matrix_n >> matrix_m) || !file) {
+	if (!(file >> matrix_n >> matrix_m)) {
 		cerr << "Ошибка чтения файла с входнымми данными" << std::endl;
-
+		file.close();
+		return false;
 	}
-	file.close();
-	
+	char e;
+	if (file >> e) {
+		cerr << "Неверные данные в файле" << std::endl;
+		file.close();
+		return false;
+	}
+
+	return true;
 }
 
 
@@ -130,3 +142,11 @@ void writeToFile(const char* output, int** matrix, int& matrix_n, int& matrix_m)
 	outputFile.close();
 }
 
+
+void freeMatrix(int**& matrix, int& matrix_n) {
+	for (int i{ 0 }; i < matrix_n; ++i) {
+		delete[] matrix[i];
+	}
+	delete[] matrix;
+	matrix = nullptr;
+}
