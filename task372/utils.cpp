@@ -36,9 +36,9 @@ int task() {
 			}
 		}
 
-		int** matrix = new int* [matrix_n];
+		double** matrix = new double* [matrix_n];
 		for (int i{ 0 }; i < matrix_n; i++) {
-			matrix[i] = new int[matrix_m];
+			matrix[i] = new double[matrix_m];
 		}
 		
 		for (int i{ 0 }; i < matrix_m; i++){
@@ -47,7 +47,7 @@ int task() {
 		
 		if (matrix_n >= 2) {
 			for (int i{ 0 }; i < matrix_m; i++){
-				matrix[1][i] = (i + 1) - (3 / (2 + 1 / (i + 1)));
+				matrix[1][i] = (i + 1) - (3 / (2 + 1. / (i + 1)));
 			}
 		}
 
@@ -117,7 +117,7 @@ bool readFromFile(const char* input,  int& matrix_n, int& matrix_m) {
 }
 
 
-void printConsole(int** matrix, int& matrix_n, int& matrix_m) {
+void printConsole(double** matrix, int& matrix_n, int& matrix_m) {
 	for (int i{ 0 }; i < matrix_n; i++) {
 		for (int j{ 0 }; j < matrix_m; j++) {
 			cout << matrix[i][j] << "  ";
@@ -126,7 +126,7 @@ void printConsole(int** matrix, int& matrix_n, int& matrix_m) {
 	}
 }
 
-void writeToFile(const char* output, int** matrix, int& matrix_n, int& matrix_m) {
+void writeToFile(const char* output, double** matrix, int& matrix_n, int& matrix_m) {
 	ofstream outputFile(output);
 	if (!outputFile.is_open()) {
 		cout << "Ошибка при открытии файла для записи" << endl;
@@ -138,12 +138,14 @@ void writeToFile(const char* output, int** matrix, int& matrix_n, int& matrix_m)
 			}
 			outputFile << endl;
 		}
+		cout << "Результат программы записан в файл: " << output << endl;
+
 	}
 	outputFile.close();
 }
 
 
-void freeMatrix(int**& matrix, int& matrix_n) {
+void freeMatrix(double**& matrix, int& matrix_n) {
 	for (int i{ 0 }; i < matrix_n; ++i) {
 		delete[] matrix[i];
 	}
